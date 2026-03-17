@@ -6,16 +6,13 @@
 <title>Leo Gao — Senior Java Backend Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0a0a0f; --bg2: #111118; --bg3: #18181f; --bg4: #1e1e28;
     --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
     --text: #f0f0f5; --muted: #7a7a8e;
-    --accent: #6ee7b7; --accent2: #818cf8; --accent3: #f472b6; --accent4: #fb923c;
+    --accent: #6ee7b7; --accent2: #818cf8; --accent3: #f472b6;
     --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace;
   }
   html { scroll-behavior: smooth; }
@@ -82,8 +79,15 @@
   .skill-tag.hot { border-color: rgba(110,231,183,0.3); color: var(--accent); }
   .skill-tag.alt { border-color: rgba(129,140,248,0.3); color: var(--accent2); }
 
+  /* NATIVE SVG CHART */
   .chart-container { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-top: 2rem; }
   .chart-title { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .chart-wrap { width: 100%; overflow-x: auto; }
+  .chart-svg { display: block; min-width: 360px; width: 100%; }
+  .bar-group rect { transition: opacity 0.15s; cursor: default; }
+  .bar-group:hover rect { opacity: 0.75; }
+  .bar-group:hover .bar-val { opacity: 1; }
+  .bar-val { opacity: 0; transition: opacity 0.15s; }
 
   .exp-timeline { position: relative; padding-left: 2rem; }
   .exp-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
@@ -113,7 +117,6 @@
 
   footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; flex-wrap: wrap; gap: 1rem; }
   .section-divider { height: 1px; background: var(--border); }
-
   .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .fade-in.visible { opacity: 1; transform: none; }
 
@@ -249,9 +252,116 @@
       </div>
     </div>
   </div>
+
   <div class="chart-container">
     <div class="chart-title">// experience depth by area (years)</div>
-    <div id="recharts-root" style="width:100%; height:260px;"></div>
+    <div class="chart-wrap">
+      <svg class="chart-svg" viewBox="0 0 740 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g-green" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6ee7b7" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#6ee7b7" stop-opacity="0.6"/>
+          </linearGradient>
+          <linearGradient id="g-indigo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#818cf8" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#818cf8" stop-opacity="0.6"/>
+          </linearGradient>
+          <linearGradient id="g-pink" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f472b6" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#f472b6" stop-opacity="0.6"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Y axis gridlines & labels -->
+        <line x1="60" y1="20" x2="60" y2="190" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+        <line x1="60" y1="190" x2="730" y2="190" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+        <!-- gridlines at 1,2,3,4,5,6 -->
+        <line x1="60" y1="162" x2="730" y2="162" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="60" y1="134" x2="730" y2="134" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="60" y1="106" x2="730" y2="106" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="60" y1="78"  x2="730" y2="78"  stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="60" y1="50"  x2="730" y2="50"  stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="60" y1="22"  x2="730" y2="22"  stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- Y labels -->
+        <text x="50" y="194" text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">0</text>
+        <text x="50" y="166" text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">1</text>
+        <text x="50" y="138" text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">2</text>
+        <text x="50" y="110" text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">3</text>
+        <text x="50" y="82"  text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">4</text>
+        <text x="50" y="54"  text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">5</text>
+        <text x="50" y="26"  text-anchor="end" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">6</text>
+
+        <!-- Bars: each slot is 84px wide starting at x=68, bar width=46, centered in slot -->
+        <!-- Slot centers: 91, 175, 259, 343, 427, 511, 595, 679 -->
+        <!-- bar x = center - 23; height = years * 28; y = 190 - height -->
+
+        <!-- Java / Spring  5yrs  green -->
+        <g class="bar-group">
+          <rect x="68" y="50" width="46" height="140" rx="2" fill="url(#g-green)"/>
+          <text class="bar-val" x="91" y="44" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+          <text x="91" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 91 215)">Java/Spring</text>
+        </g>
+
+        <!-- Kafka  4yrs  green -->
+        <g class="bar-group">
+          <rect x="152" y="78" width="46" height="112" rx="2" fill="url(#g-green)"/>
+          <text class="bar-val" x="175" y="72" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">4</text>
+          <text x="175" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 175 215)">Kafka</text>
+        </g>
+
+        <!-- PostgreSQL  5yrs  green -->
+        <g class="bar-group">
+          <rect x="236" y="50" width="46" height="140" rx="2" fill="url(#g-green)"/>
+          <text class="bar-val" x="259" y="44" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">5</text>
+          <text x="259" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 259 215)">PostgreSQL</text>
+        </g>
+
+        <!-- Redis  4yrs  green -->
+        <g class="bar-group">
+          <rect x="320" y="78" width="46" height="112" rx="2" fill="url(#g-green)"/>
+          <text class="bar-val" x="343" y="72" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">4</text>
+          <text x="343" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 343 215)">Redis</text>
+        </g>
+
+        <!-- AWS  3yrs  indigo -->
+        <g class="bar-group">
+          <rect x="404" y="106" width="46" height="84" rx="2" fill="url(#g-indigo)"/>
+          <text class="bar-val" x="427" y="100" text-anchor="middle" fill="#818cf8" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">3</text>
+          <text x="427" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 427 215)">AWS</text>
+        </g>
+
+        <!-- Docker/K8s  3yrs  indigo -->
+        <g class="bar-group">
+          <rect x="488" y="106" width="46" height="84" rx="2" fill="url(#g-indigo)"/>
+          <text class="bar-val" x="511" y="100" text-anchor="middle" fill="#818cf8" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">3</text>
+          <text x="511" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 511 215)">Docker/K8s</text>
+        </g>
+
+        <!-- React/TS  2yrs  pink -->
+        <g class="bar-group">
+          <rect x="572" y="134" width="46" height="56" rx="2" fill="url(#g-pink)"/>
+          <text class="bar-val" x="595" y="128" text-anchor="middle" fill="#f472b6" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">2</text>
+          <text x="595" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 595 215)">React/TS</text>
+        </g>
+
+        <!-- gRPC  2yrs  pink -->
+        <g class="bar-group">
+          <rect x="656" y="134" width="46" height="56" rx="2" fill="url(#g-pink)"/>
+          <text class="bar-val" x="679" y="128" text-anchor="middle" fill="#f472b6" font-size="11" font-family="'JetBrains Mono',monospace" font-weight="700">2</text>
+          <text x="679" y="215" text-anchor="middle" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace" transform="rotate(-30 679 215)">gRPC</text>
+        </g>
+
+        <!-- Legend -->
+        <rect x="62" y="244" width="10" height="10" rx="1" fill="#6ee7b7"/>
+        <text x="78" y="253" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">Backend / Data</text>
+        <rect x="200" y="244" width="10" height="10" rx="1" fill="#818cf8"/>
+        <text x="216" y="253" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">Cloud / Infra</text>
+        <rect x="330" y="244" width="10" height="10" rx="1" fill="#f472b6"/>
+        <text x="346" y="253" fill="#7a7a8e" font-size="10" font-family="'JetBrains Mono',monospace">Frontend</text>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -369,45 +479,9 @@
 
 <script>
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-function renderChart() {
-  if (!window.Recharts || !window.React || !window.ReactDOM) {
-    setTimeout(renderChart, 200); return;
-  }
-  const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } = Recharts;
-  const data = [
-    { area: 'Java / Spring', years: 5 },
-    { area: 'Kafka', years: 4 },
-    { area: 'PostgreSQL', years: 5 },
-    { area: 'Redis', years: 4 },
-    { area: 'AWS', years: 3 },
-    { area: 'Docker/K8s', years: 3 },
-    { area: 'React / TS', years: 2 },
-    { area: 'gRPC', years: 2 },
-  ];
-  const colors = ['#6ee7b7','#6ee7b7','#6ee7b7','#6ee7b7','#818cf8','#818cf8','#f472b6','#f472b6'];
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (!active || !payload || !payload.length) return null;
-    return React.createElement('div', {
-      style: { background: '#18181f', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 14px', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#f0f0f5' }
-    }, React.createElement('div', {style:{marginBottom:'2px'}}, label), React.createElement('div', { style: {color: '#6ee7b7'} }, payload[0].value + ' yrs'));
-  };
-  const chart = React.createElement(ResponsiveContainer, { width: '100%', height: 260 },
-    React.createElement(BarChart, { data, margin: { top: 5, right: 10, bottom: 30, left: -10 }, barSize: 30 },
-      React.createElement(XAxis, { dataKey: 'area', tick: { fill: '#7a7a8e', fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }, axisLine: { stroke: 'rgba(255,255,255,0.07)' }, tickLine: false, angle: -25, textAnchor: 'end', height: 70 }),
-      React.createElement(YAxis, { tick: { fill: '#7a7a8e', fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }, axisLine: false, tickLine: false, domain: [0, 6], ticks: [0,1,2,3,4,5,6] }),
-      React.createElement(Tooltip, { content: React.createElement(CustomTooltip), cursor: { fill: 'rgba(255,255,255,0.03)' } }),
-      React.createElement(Bar, { dataKey: 'years', radius: [2,2,0,0] },
-        data.map((_, i) => React.createElement(Cell, { key: i, fill: colors[i] }))
-      )
-    )
-  );
-  ReactDOM.render(chart, document.getElementById('recharts-root'));
-}
-renderChart();
 </script>
 </body>
 </html>
