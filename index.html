@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leo Gao — Senior Java Backend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0f; --bg2: #111118; --bg3: #18181f; --bg4: #1e1e28;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f5; --muted: #7a7a8e;
+    --accent: #6ee7b7; --accent2: #818cf8; --accent3: #f472b6; --accent4: #fb923c;
+    --font-display: 'Syne', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); font-size: 14px; line-height: 1.7; overflow-x: hidden; }
+  ::selection { background: rgba(110,231,183,0.25); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+
+  #hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .hero-inner { padding: 7rem 2.5rem 4rem; position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .hero-grid-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: linear-gradient(rgba(110,231,183,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(110,231,183,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-glow { position: absolute; top: -200px; right: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(129,140,248,0.07) 0%, transparent 70%); pointer-events: none; }
+  .hero-glow2 { position: absolute; bottom: -100px; left: 10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(110,231,183,0.05) 0%, transparent 70%); pointer-events: none; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(110,231,183,0.08); border: 1px solid rgba(110,231,183,0.2); border-radius: 2px;
+    padding: 4px 12px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .hero-tag::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+  h1 { font-family: var(--font-display); font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.2rem; }
+  h1 .name-accent { color: var(--accent2); }
+  .hero-subtitle { font-size: clamp(0.82rem, 1.5vw, 1rem); color: var(--muted); margin-bottom: 2.5rem; max-width: 620px; line-height: 1.85; }
+  .hero-subtitle .hl { color: var(--accent); }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #0a0a0f; padding: 0.65rem 1.4rem; border-radius: 2px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; border: 1px solid var(--accent); }
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--muted); padding: 0.65rem 1.4rem; border-radius: 2px; border: 1px solid var(--border2); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .stat-num { font-family: var(--font-display); font-weight: 800; font-size: 2rem; color: var(--text); letter-spacing: -0.03em; }
+  .stat-num span { color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+  section.content { max-width: 1100px; margin: 0 auto; padding: 6rem 2.5rem; }
+  .section-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; max-width: 40px; height: 1px; background: var(--accent); opacity: 0.4; }
+  h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 3rem; line-height: 1.1; }
+
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5px; border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .skill-cell { background: var(--bg2); padding: 1.4rem 1.6rem; transition: background 0.2s; }
+  .skill-cell:hover { background: var(--bg3); }
+  .skill-cat { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-tag { font-size: 12px; padding: 3px 10px; border-radius: 2px; border: 1px solid var(--border2); color: var(--text); background: var(--bg4); transition: all 0.15s; cursor: default; }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .skill-tag.hot { border-color: rgba(110,231,183,0.3); color: var(--accent); }
+  .skill-tag.alt { border-color: rgba(129,140,248,0.3); color: var(--accent2); }
+
+  .chart-container { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-top: 2rem; }
+  .chart-title { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .exp-timeline { position: relative; padding-left: 2rem; }
+  .exp-timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
+  .exp-item { position: relative; margin-bottom: 3.5rem; padding-bottom: 3.5rem; border-bottom: 1px solid var(--border); }
+  .exp-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .exp-dot { position: absolute; left: -2.4rem; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--border2); transition: all 0.2s; }
+  .exp-item:hover .exp-dot { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 12px rgba(110,231,183,0.4); }
+  .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+  .exp-role { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); }
+  .exp-period { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; padding-top: 4px; }
+  .exp-company { font-size: 13px; color: var(--accent2); margin-bottom: 0.9rem; }
+  .exp-company span { color: var(--muted); }
+  .exp-bullets { list-style: none; }
+  .exp-bullets li { position: relative; padding-left: 1.2rem; font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 0.35rem; }
+  .exp-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 11px; top: 2px; }
+  .exp-bullets li strong { color: var(--text); font-weight: 500; }
+  .exp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 0.9rem; }
+  .exp-tag { font-size: 11px; padding: 2px 8px; border-radius: 2px; background: var(--bg4); color: var(--muted); border: 1px solid var(--border); }
+
+  .contact-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 4rem 3rem; max-width: 600px; margin: 0 auto; position: relative; overflow: hidden; text-align: center; }
+  .contact-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top, rgba(129,140,248,0.06), transparent 70%); pointer-events: none; }
+  .contact-card p { color: var(--muted); font-size: 13px; margin-bottom: 2rem; }
+  .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .contact-item { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; transition: color 0.2s; text-decoration: none; }
+  .contact-item:hover { color: var(--accent); }
+  .contact-item .icon { color: var(--accent2); }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; flex-wrap: wrap; gap: 1rem; }
+  .section-divider { height: 1px; background: var(--border); }
+
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.25rem; } .nav-links { gap: 1rem; }
+    section.content { padding: 4rem 1.25rem; }
+    .hero-inner { padding: 5rem 1.25rem 3rem; }
+    .hero-stats { gap: 1.5rem; }
+    .exp-timeline { padding-left: 1.25rem; } .exp-dot { left: -1.65rem; }
+    .contact-card { padding: 2.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#hero">Leo<span>.</span></a>
+  <div class="nav-links">
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+    <a href="https://www.linkedin.com/in/cangheng-gao-6b9583392/" target="_blank" style="color: var(--accent2);">LinkedIn ↗</a>
+  </div>
+</nav>
+
+<div id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Available for new opportunities</div>
+    <h1>Leo<br><span class="name-accent">(Cangheng)</span><br>Gao</h1>
+    <p class="hero-subtitle">
+      Senior Java Backend Engineer · 5+ years building <span class="hl">enterprise-scale microservices</span>,
+      event-driven pipelines, and distributed systems. Currently at <span class="hl">Springbuk</span>
+      processing 2M+ healthcare claims daily. Open to relocation.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Get in touch →</a>
+      <a href="#experience" class="btn-ghost">View experience</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">5<span>+</span></div><div class="stat-label">Years experience</div></div>
+      <div><div class="stat-num">2<span>M+</span></div><div class="stat-label">Daily claims processed</div></div>
+      <div><div class="stat-num">99.9<span>%</span></div><div class="stat-label">Uptime SLA</div></div>
+      <div><div class="stat-num">65<span>%</span></div><div class="stat-label">Latency reduction</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<section class="content fade-in" id="skills">
+  <div class="section-label">Technical stack</div>
+  <h2>Built to scale.</h2>
+  <div class="skills-grid">
+    <div class="skill-cell">
+      <div class="skill-cat">Core languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">Java 8/11/17</span>
+        <span class="skill-tag alt">TypeScript</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Spring ecosystem</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">Spring Boot</span>
+        <span class="skill-tag hot">Spring Security</span>
+        <span class="skill-tag">Spring Batch</span>
+        <span class="skill-tag">Spring Cloud</span>
+        <span class="skill-tag">Spring WebFlux</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Messaging & streaming</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">Apache Kafka</span>
+        <span class="skill-tag hot">Apache Flink</span>
+        <span class="skill-tag">RabbitMQ</span>
+        <span class="skill-tag">AWS SQS/SNS</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Databases</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">PostgreSQL</span>
+        <span class="skill-tag hot">Redis</span>
+        <span class="skill-tag">MongoDB</span>
+        <span class="skill-tag">Cassandra</span>
+        <span class="skill-tag">Elasticsearch</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Cloud & DevOps</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">AWS (EC2, EKS, S3, RDS)</span>
+        <span class="skill-tag">Lambda</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Kubernetes</span>
+        <span class="skill-tag">Terraform</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Frontend</div>
+      <div class="skill-tags">
+        <span class="skill-tag alt">React</span>
+        <span class="skill-tag alt">TypeScript</span>
+        <span class="skill-tag">React Query</span>
+        <span class="skill-tag">Recharts</span>
+        <span class="skill-tag">Axios</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Architecture patterns</div>
+      <div class="skill-tags">
+        <span class="skill-tag hot">RESTful APIs</span>
+        <span class="skill-tag">gRPC</span>
+        <span class="skill-tag">GraphQL</span>
+        <span class="skill-tag">Eureka</span>
+        <span class="skill-tag">Resilience4j</span>
+      </div>
+    </div>
+    <div class="skill-cell">
+      <div class="skill-cat">Observability</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Grafana</span>
+        <span class="skill-tag">Splunk</span>
+        <span class="skill-tag">Datadog</span>
+        <span class="skill-tag">CloudWatch</span>
+        <span class="skill-tag">Zipkin</span>
+      </div>
+    </div>
+  </div>
+  <div class="chart-container">
+    <div class="chart-title">// experience depth by area (years)</div>
+    <div id="recharts-root" style="width:100%; height:260px;"></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="content fade-in" id="experience">
+  <div class="section-label">Work history</div>
+  <h2>Where I've shipped.</h2>
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-role">Senior Java Backend Engineer</div>
+        <div class="exp-period">Jun 2023 – Present</div>
+      </div>
+      <div class="exp-company">Springbuk <span>· Health Analytics SaaS · Indianapolis, IN</span></div>
+      <ul class="exp-bullets">
+        <li>Architected <strong>claims processing microservice</strong> handling <strong>2M+ healthcare claims/day</strong> with 99.9% uptime (Spring Boot, Kafka, PostgreSQL)</li>
+        <li>Designed <strong>multi-tenant data isolation</strong> for 200+ enterprise clients — row-level security, zero data leakage incidents</li>
+        <li>Built real-time analytics with <strong>Redis caching reducing query latency by 65%</strong>; companion React employer dashboard</li>
+        <li>Led <strong>batch → streaming migration</strong> via Apache Flink, cutting processing time from 4 hours to under 12 minutes</li>
+        <li>Integrated <strong>ML anomaly detection</strong> into claims pipeline, cutting fraudulent processing by 30% across 100+ carriers</li>
+        <li>Built <strong>React ops portal</strong> for on-call engineers to triage claims pipeline incidents in real time</li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Spring Boot</span><span class="exp-tag">Kafka</span><span class="exp-tag">PostgreSQL</span>
+        <span class="exp-tag">Apache Flink</span><span class="exp-tag">Redis</span><span class="exp-tag">React</span>
+        <span class="exp-tag">AWS</span><span class="exp-tag">Grafana</span>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-role">Java Backend Engineer</div>
+        <div class="exp-period">Aug 2022 – May 2023</div>
+      </div>
+      <div class="exp-company">Arity <span>· Mobility Data & Analytics · Chicago, IL</span></div>
+      <ul class="exp-bullets">
+        <li>Built telematics microservices processing <strong>10M+ driving events/day</strong> at sub-100ms p99 latency</li>
+        <li>Migrated monolithic data pipeline to Spring Cloud microservices, <strong>reducing processing time by 60%</strong></li>
+        <li>Designed <strong>gRPC inter-service layer</strong> cutting inter-service latency by 40%, improving GPS event throughput</li>
+        <li>Defined REST contracts with mobile SDK team serving <strong>500K+ active drivers</strong> on iOS and Android</li>
+        <li>Built React driver analytics portal and <strong>Kafka admin dashboard</strong> for internal data ops</li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Spring Cloud</span><span class="exp-tag">Kafka</span><span class="exp-tag">gRPC</span>
+        <span class="exp-tag">PostgreSQL</span><span class="exp-tag">MongoDB</span><span class="exp-tag">React</span>
+        <span class="exp-tag">Resilience4j</span><span class="exp-tag">Jenkins</span>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-role">Java Backend Engineer</div>
+        <div class="exp-period">Aug 2021 – Jul 2022</div>
+      </div>
+      <div class="exp-company">Bandwidth <span>· Cloud Communications · Durham, NC</span></div>
+      <ul class="exp-bullets">
+        <li>Built high-throughput APIs for CPaaS platform handling <strong>500M+ SMS/voice calls monthly</strong></li>
+        <li>Number provisioning service <strong>cut manual processing by 70%</strong>; React admin UI for non-technical ops teams</li>
+        <li>Event-driven webhook system achieved <strong>99.95% delivery SLA</strong> across 1,000+ enterprise accounts</li>
+        <li><strong>PostgreSQL query performance +55%</strong> via composite indexing and materialized views</li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Spring Boot</span><span class="exp-tag">Kafka</span><span class="exp-tag">Redis</span>
+        <span class="exp-tag">PostgreSQL</span><span class="exp-tag">AWS ECS</span><span class="exp-tag">React</span>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-header">
+        <div class="exp-role">Java Software Engineer</div>
+        <div class="exp-period">Dec 2020 – Jul 2021</div>
+      </div>
+      <div class="exp-company">SPS Commerce <span>· Retail Supply Chain EDI · Minneapolis, MN</span></div>
+      <ul class="exp-bullets">
+        <li>Processed <strong>50M+ retail EDI transactions/day</strong> for Target, Walmart, Amazon</li>
+        <li>Kafka consumer groups with <strong>exactly-once delivery</strong> semantics, eliminating duplicate shipments</li>
+        <li>PostgreSQL schema with partitioning supporting <strong>billion-row transaction history</strong></li>
+        <li>Comprehensive test suites (JUnit, Mockito, Testcontainers) achieving <strong>90% code coverage</strong></li>
+      </ul>
+      <div class="exp-tags">
+        <span class="exp-tag">Spring Batch</span><span class="exp-tag">Kafka</span><span class="exp-tag">PostgreSQL</span>
+        <span class="exp-tag">Redis</span><span class="exp-tag">JUnit</span><span class="exp-tag">Testcontainers</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="content fade-in" id="contact" style="text-align:center;">
+  <div class="contact-card">
+    <div class="section-label" style="justify-content:center; margin-bottom:0.5rem;">Let's connect</div>
+    <h2 style="margin-bottom:1rem;">Open to new<br>opportunities.</h2>
+    <p>Actively exploring senior/staff backend, full-stack, and distributed systems roles.<br>Open to relocation anywhere in the US.</p>
+    <div class="contact-links">
+      <a href="mailto:leocangheng@gmail.com" class="contact-item"><span class="icon">✉</span> leocangheng@gmail.com</a>
+      <a href="tel:+12172745603" class="contact-item"><span class="icon">✆</span> (217) 274-5603</a>
+      <a href="https://www.linkedin.com/in/cangheng-gao-6b9583392/" target="_blank" class="contact-item"><span class="icon">in</span> linkedin.com/in/cangheng-gao</a>
+      <span class="contact-item"><span class="icon">◎</span> Danville, IL · Open to relocation</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Leo (Cangheng) Gao · Senior Java Backend Engineer</span>
+  <span style="color: var(--accent); font-family: var(--font-mono);">// always building</span>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+function renderChart() {
+  if (!window.Recharts || !window.React || !window.ReactDOM) {
+    setTimeout(renderChart, 200); return;
+  }
+  const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } = Recharts;
+  const data = [
+    { area: 'Java / Spring', years: 5 },
+    { area: 'Kafka', years: 4 },
+    { area: 'PostgreSQL', years: 5 },
+    { area: 'Redis', years: 4 },
+    { area: 'AWS', years: 3 },
+    { area: 'Docker/K8s', years: 3 },
+    { area: 'React / TS', years: 2 },
+    { area: 'gRPC', years: 2 },
+  ];
+  const colors = ['#6ee7b7','#6ee7b7','#6ee7b7','#6ee7b7','#818cf8','#818cf8','#f472b6','#f472b6'];
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    return React.createElement('div', {
+      style: { background: '#18181f', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 14px', borderRadius: '2px', fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#f0f0f5' }
+    }, React.createElement('div', {style:{marginBottom:'2px'}}, label), React.createElement('div', { style: {color: '#6ee7b7'} }, payload[0].value + ' yrs'));
+  };
+  const chart = React.createElement(ResponsiveContainer, { width: '100%', height: 260 },
+    React.createElement(BarChart, { data, margin: { top: 5, right: 10, bottom: 30, left: -10 }, barSize: 30 },
+      React.createElement(XAxis, { dataKey: 'area', tick: { fill: '#7a7a8e', fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }, axisLine: { stroke: 'rgba(255,255,255,0.07)' }, tickLine: false, angle: -25, textAnchor: 'end', height: 70 }),
+      React.createElement(YAxis, { tick: { fill: '#7a7a8e', fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }, axisLine: false, tickLine: false, domain: [0, 6], ticks: [0,1,2,3,4,5,6] }),
+      React.createElement(Tooltip, { content: React.createElement(CustomTooltip), cursor: { fill: 'rgba(255,255,255,0.03)' } }),
+      React.createElement(Bar, { dataKey: 'years', radius: [2,2,0,0] },
+        data.map((_, i) => React.createElement(Cell, { key: i, fill: colors[i] }))
+      )
+    )
+  );
+  ReactDOM.render(chart, document.getElementById('recharts-root'));
+}
+renderChart();
+</script>
+</body>
+</html>
